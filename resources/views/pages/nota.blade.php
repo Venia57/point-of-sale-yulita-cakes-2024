@@ -62,7 +62,7 @@
 </head>
 <body>
     <h1>Yulita Cakes</h1>
-    <h2>Kab. Kubu Raya, Desa Kapur/h2>
+    <h2>Kab. Kubu Raya, Desa Kapur</h2>
     <p>Tanggal: {{ date('d-m-Y') }} {{ date('H:i:s') }}</p>
     <p>No: {{ str_pad($penjualan->id, 10, '0', STR_PAD_LEFT) }}</p>
     <p>Kasir: {{ $penjualan->nama_kasir }}</p>
