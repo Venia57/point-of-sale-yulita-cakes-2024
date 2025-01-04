@@ -20,24 +20,4 @@ class Produk extends Model
     {
         return $this->hasMany(DetailPenjualan::class, 'id_produk');
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->kode_produk = self::generateUniqueKodeProduk();
-        });
-    }
-
-    public static function generateUniqueKodeProduk()
-    {
-        $faker = Faker::create();
-        do {
-            $kode_produk = $faker->unique()->ean13;
-        } while (self::where('kode_produk', $kode_produk)->exists());
-
-        return $kode_produk;
-    }
-
 }
