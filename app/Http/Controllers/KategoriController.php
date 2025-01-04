@@ -33,8 +33,12 @@ class KategoriController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 401);
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors(),
+            ], 422); // Gunakan status HTTP 422 untuk validasi gagal
         }
+
 
         $user = new Kategori();
         $user->nama_kategori = $request->nama_kategori;
