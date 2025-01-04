@@ -46,6 +46,7 @@
                                 <th>No</th>
                                 <th>Deskripsi</th>
                                 <th>Nominal</th>
+                                <th>Dibuat Oleh</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
