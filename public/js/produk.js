@@ -8,7 +8,6 @@ $("#tabelProduk").DataTable({
     columns: [
         { data: "select_all", name: "select_all", sortable: false },
         { data: "DT_RowIndex", name: "DT_RowIndex" },
-        { data: "kode_produk", name: "kode_produk" },
         { data: "nama_produk", name: "nama_produk" },
         { data: "nama_kategori", name: "nama_kategori" },
         { data: "harga_modal", name: "harga_modal" },
