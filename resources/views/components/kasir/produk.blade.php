@@ -14,7 +14,6 @@
                         <thead class="text-center">
                             <tr>
                                 <th>No</th>
-                                <th>Kode Produk</th>
                                 <th>Nama Produk</th>
                                 <th>Nama Kategori</th>
                                 <th>Harga Modal</th>
@@ -28,12 +27,11 @@
                             @foreach ($produks as $key => $produk)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $produk->kode_produk }}</td>
                                     <td>{{ $produk->nama_produk }}</td>
                                     <td>{{ $produk->kategori->nama_kategori }}</td>
                                     <td>{{ format_uang($produk->harga_modal) }}</td>
                                     <td>{{ format_uang($produk->harga_jual) }}</td>
-                                    <td>{{ format_uang($produk->diskon) }}</td>
+                                    <td>{{ $produk->diskon }} %</td>
                                     <td>{{ $produk->stok }}</td>
                                     <td>
                                         <a href="#"
@@ -41,7 +39,6 @@
                                             @else class="btn btn-primary btn-xs btn-flat pilih-produk"
                                             @endif
                                             data-id="{{ $produk->id }}"
-                                            data-kode="{{ $produk->kode_produk }}"
                                             data-nama="{{ $produk->nama_produk }}"
                                             data-harga="{{ $produk->harga_jual }}"
                                             data-diskon="{{ $produk->diskon }}"
