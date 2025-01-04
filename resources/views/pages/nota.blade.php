@@ -62,7 +62,7 @@
 </head>
 <body>
     <h1>Yulita Cakes</h1>
-    <h2>Kab. Kubu Raya, Desa Kapur</h2>
+    <h2>Desa Kapur, Kab. Kubu Raya</h2>
     <p>Tanggal: {{ date('d-m-Y') }} {{ date('H:i:s') }}</p>
     <p>No: {{ str_pad($penjualan->id, 10, '0', STR_PAD_LEFT) }}</p>
     <p>Kasir: {{ $penjualan->nama_kasir }}</p>
@@ -83,7 +83,7 @@
                 <td>{{ $detail->produk->nama_produk }}</td>
                 <td class="text-right">{{ format_uang($detail->harga_jual) }}</td>
                 <td class="text-right">{{ $detail->jumlah }}</td>
-                <td class="text-right">{{ format_uang($detail->diskon) }}</td>
+                <td class="text-right">{{ $detail->diskon }} %</td>
                 <td class="text-right">{{ format_uang($detail->subtotal) }}</td>
             </tr>
             @endforeach
@@ -98,7 +98,7 @@
             </tr>
             <tr>
                 <td class="text-left">Diskon</td>
-                <td class="text-right">{{ format_uang($penjualan->diskon) }}</td>
+                <td class="text-right">{{ $penjualan->diskon }} %</td>
             </tr>
             <tr>
                 <td class="text-left">Total Bayar</td>
