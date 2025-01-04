@@ -27,7 +27,7 @@
                             <span class="input-group-text" id="username">Peran</span>
                             <select class="form-control form-select" id="input_isAdminEdit">
                                 <option disabled selected>Pilih Peran</option>
-                                <option value="0">Biasa</option>
+                                <option value="0">Kasir</option>
                                 <option value="1">Admin</option>
                             </select>
                         </div>
