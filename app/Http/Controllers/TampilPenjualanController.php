@@ -17,7 +17,7 @@ class TampilPenjualanController extends Controller
 
     public function penjualanDataTables()
     {
-        $penjualan = Penjualan::orderBy('created_at', 'desc')->get();
+        $penjualan = Penjualan::with('user')->orderBy('created_at', 'desc')->get();
 
         return DataTables::of($penjualan)
             ->addIndexColumn()
@@ -26,6 +26,9 @@ class TampilPenjualanController extends Controller
             })
             ->addColumn('waktu', function ($penjualan) {
                 return Carbon::parse($penjualan->created_at)->format('H:i:s') . ' WIB';
+            })
+            ->addColumn('id_user', function ($data) {
+                return $data->id_user ? $data->user->nama : '-';
             })
             ->addColumn('no_nota', function ($penjualan) {
                 return tambah_nol_didepan($penjualan->id, 10);
