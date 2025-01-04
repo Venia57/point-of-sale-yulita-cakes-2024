@@ -15,7 +15,7 @@ class LaporanController extends Controller
         $startDate = $request->input('start_date', Carbon::today()->format('Y-m-d'));
         $endDate = $request->input('end_date', Carbon::today()->format('Y-m-d'));
 
-        $data = DetailPenjualan::with('produk', 'penjualan')
+        $data = DetailPenjualan::with(['produk', 'penjualan.user'])
             ->whereHas('penjualan', function ($query) use ($startDate, $endDate) {
                 $query->whereDate('created_at', '>=', $startDate)
                     ->whereDate('created_at', '<=', $endDate);
@@ -41,13 +41,16 @@ class LaporanController extends Controller
                 return format_uang($data->subtotal);
             })
             ->addColumn('diskon', function ($data) {
-                return format_uang($data->diskon);
+                return $data->diskon . "%";
             })
             ->addColumn('keuntungan', function ($data) {
                 return format_uang($data->keuntungan);
             })
-            ->addColumn('nama_kasir', function ($data) {
-                return $data->penjualan->nama_kasir;
+            ->addColumn('id_user', function ($data) {
+                if ($data->penjualan && $data->penjualan->user) {
+                    return $data->penjualan->user->nama;
+                }
+                return 'Relasi tidak ditemukan';
             })
             ->with('totalSubtotal', format_uang($totalSubtotal))
             ->with('totalDiskon', $totalDiskon . '%')
