@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let table = $("#tabelLaporanPenjualan").DataTable({
-        processing: true,
+        processing: false,
         serverSide: true,
         searching: false,
         paging: false,
@@ -30,7 +30,7 @@ $(document).ready(function () {
             { data: "subtotal", name: "subtotal" },
             { data: "diskon", name: "diskon" },
             { data: "keuntungan", name: "keuntungan" },
-            { data: "penjualan.nama_kasir", name: "nama_kasir" },
+            { data: "penjualan.user.nama", name: "user.nama" }
         ],
     });
 
