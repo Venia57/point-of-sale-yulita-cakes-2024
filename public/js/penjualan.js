@@ -23,7 +23,7 @@ $("#tabelPenjualan").DataTable({
             data: "diskon",
             name: "diskon",
             render: function (data) {
-                return format_uang(parseInt(data));
+                return parseInt(data) + "%";
             },
         },
         {
@@ -40,7 +40,7 @@ $("#tabelPenjualan").DataTable({
                 return format_uang(parseInt(data));
             },
         },
-        { data: "nama_kasir", name: "nama_kasir" },
+        { data: "id_user", name: "id_user" },
         { data: "aksi", name: "aksi", orderable: false, searchable: false },
     ],
 });
@@ -67,7 +67,7 @@ $(document).on("click", "#tombol-detail-penjualan", function (e) {
                         <td>${detail.produk.nama_produk}</td>
                         <td>${format_uang(detail.harga_jual)}</td>
                         <td>${detail.jumlah}</td>
-                        <td>${format_uang(detail.diskon)}</td>
+                        <td>${detail.diskon}%</td>
                         <td>${format_uang(detail.subtotal)}</td>
                     </tr>
                 `;
