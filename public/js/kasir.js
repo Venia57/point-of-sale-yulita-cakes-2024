@@ -43,12 +43,15 @@ function hitungKembalian() {
 function hitungDiskon() {
     let total = parseFloat($("#totalrp").val().replace(/\D/g, "")) || 0;
     let diskon = parseFloat($("#diskon").val()) || 0;
-    let hargaBayarSetelahDiskon = total - diskon;
+    
+    // Hitung diskon sebagai persentase
+    let hargaBayarSetelahDiskon = total - (total * diskon / 100);
 
     $("#bayarrp").val(format_uang(hargaBayarSetelahDiskon));
     $("#kembali").val(format_uang(hargaBayarSetelahDiskon));
     $(".tampil-bayar").text("Bayar: " + format_uang(hargaBayarSetelahDiskon));
 }
+
 
 // Inisialisasi ketika dokumen siap
 $(document).ready(function () {
@@ -74,7 +77,6 @@ $(document).ready(function () {
         info: false,
         columns: [
             { title: "No" },
-            { title: "Kode" },
             { title: "Nama" },
             {
                 title: "Harga",
@@ -86,7 +88,7 @@ $(document).ready(function () {
             {
                 title: "Diskon",
                 render: function (data) {
-                    return format_uang(parseInt(data))
+                    return (parseInt(data)) + "%";
                 },
             },
             {
@@ -105,12 +107,11 @@ $(document).ready(function () {
         ],
     });
 
-    // Event handler untuk tombol pilih produk
     $(".pilih-produk").click(function (e) {
         e.preventDefault();
 
         let data = {
-            kode: $(this).data("kode"),
+            id: $(this).data("id"), // Use ID instead of kode_produk
             nama: $(this).data("nama"),
             harga: $(this).data("harga"),
             diskon: $(this).data("diskon"),
@@ -126,7 +127,7 @@ $(document).ready(function () {
 
                 table.rows().every(function () {
                     let rowData = this.data();
-                    if (rowData[1] === product.kode) {
+                    if (rowData[1] === product.id) { // Check by ID
                         exists = true;
                         return false;
                     }
@@ -136,10 +137,9 @@ $(document).ready(function () {
                     table.row
                         .add([
                             "",
-                            product.kode,
                             product.nama,
                             product.harga,
-                            `<input type="number" class="form-control jumlah" value="1" min="1" data-id="${product.kode}" data-harga="${product.harga}" data-diskon="${product.diskon}">`,
+                            `<input type="number" class="form-control jumlah" value="1" min="1" data-id="${product.id}" data-harga="${product.harga}" data-diskon="${product.diskon}">`,
                             product.diskon,
                             product.subtotal,
                             '<button class="btn btn-danger btn-sm btn-hapus">Hapus</button>',
@@ -226,13 +226,13 @@ $(document).ready(function () {
 
         let produk = [];
         table.rows().every(function () {
-            let data = this.data();
+            let row = $(this.node());
             produk.push({
-                id: data[1], // Kode Produk
-                harga_jual: parseInt(data[3].replace(/\D/g, "")),
-                jumlah: $(this.node()).find(".jumlah").val(),
-                diskon: parseInt(data[5]) || 0,
-                subtotal: parseInt($(this.node()).find(".subtotal").data("value")) // Ambil data-value dari elemen subtotal
+                id: row.find(".jumlah").data("id"), // Ambil ID dari atribut data-id
+                harga_jual: parseInt(row.find(".jumlah").data("harga")),
+                jumlah: row.find(".jumlah").val(),
+                diskon: parseInt(row.find(".jumlah").data("diskon")) || 0,
+                subtotal: parseInt(row.find(".subtotal").data("value")),
             });
         });
 
@@ -243,7 +243,7 @@ $(document).ready(function () {
             diskon: parseFloat($("#diskon").val()) || 0,
             bayar: parseInt($("#bayarrp").val().replace(/\D/g, "")),
             diterima: parseInt($("#diterima").val().replace(/\D/g, "")),
-            nama_kasir: $("#nama_kasir").val(),
+            id_user: $("#nama_kasir").val(),
             produk: produk,
             _token: $('meta[name="csrf-token"]').attr("content"),
         };
@@ -271,13 +271,13 @@ $(document).ready(function () {
 
         let produk = [];
         table.rows().every(function () {
-            let data = this.data();
+            let row = $(this.node());
             produk.push({
-                id: data[1], // Kode Produk
-                harga_jual: parseInt(data[3].replace(/\D/g, "")),
-                jumlah: $(this.node()).find(".jumlah").val(),
-                diskon: parseInt(data[5]) || 0,
-                subtotal: parseInt($(this.node()).find(".subtotal").data("value")) // Ambil data-value dari elemen subtotal
+                id: row.find(".jumlah").data("id"), // Ambil ID dari atribut data-id
+                harga_jual: parseInt(row.find(".jumlah").data("harga")),
+                jumlah: row.find(".jumlah").val(),
+                diskon: parseInt(row.find(".jumlah").data("diskon")) || 0,
+                subtotal: parseInt(row.find(".subtotal").data("value")),
             });
         });
 
@@ -288,7 +288,7 @@ $(document).ready(function () {
             diskon: parseFloat($("#diskon").val()) || 0,
             bayar: parseInt($("#bayarrp").val().replace(/\D/g, "")),
             diterima: parseInt($("#diterima").val().replace(/\D/g, "")),
-            nama_kasir: $("#nama_kasir").val(),
+            id_user: $("#nama_kasir").val(),
             produk: produk,
             _token: $('meta[name="csrf-token"]').attr("content"),
         };
