@@ -9,6 +9,7 @@ $("#tabelPengeluaran").DataTable({
         { data: "DT_RowIndex", name: "DT_RowIndex" },
         { data: "deskripsi", name: "deskripsi" },
         { data: "nominal", name: "nominal" },
+        { data: "id_user", name: "id_user" },
         { data: "aksi", name: "aksi", orderable: false, searchable: false },
     ],
 });
