@@ -30,7 +30,7 @@ class ProdukController extends Controller
                 return format_uang($data->harga_jual);
             })
             ->addColumn('diskon', function ($data) {
-                return format_uang($data->diskon);
+                return ($data->diskon) . "%";
             })
             ->addColumn('aksi', function ($produk) {
                 return view('components.produk.tombol-aksi')->with('produk', $produk);
