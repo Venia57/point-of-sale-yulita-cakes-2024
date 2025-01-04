@@ -30,36 +30,37 @@ class DetailPenjualan extends Model
         return $this->belongsTo(Produk::class, 'id_produk');
     }
 
-    public function getKeuntunganAttribute()
-    {
-        // Mengakses harga_beli dari relasi produk
-        $hargaBeli = $this->produk->harga_beli;
+    // public function getKeuntunganAttribute()
+    // {
+    //     // Mengakses harga_beli dari relasi produk
+    //     $hargaBeli = $this->produk->harga_beli;
 
-        // Menghitung harga setelah diskon
-        $hargaSetelahDiskon = $this->harga_jual - $this->diskon;
+    //     // Menghitung harga setelah diskon
+    //     $hargaSetelahDiskon = $this->harga_jual - $this->diskon;
 
-        // Menghitung keuntungan
-        $keuntungan = ($hargaSetelahDiskon - $hargaBeli) * $this->jumlah;
+    //     // Menghitung keuntungan
+    //     $keuntungan = ($hargaSetelahDiskon - $hargaBeli) * $this->jumlah;
 
-        return $keuntungan;
-    }
+    //     return $keuntungan;
+    // }
 
     protected static function boot()
     {
         parent::boot();
 
         static::saving(function ($model) {
-            // Mengakses harga_beli dari relasi produk
-            $hargaModal = $model->produk->harga_modal;
+            $produk = $model->produk;
 
-            // Menghitung harga setelah diskon
-            $hargaSetelahDiskon = $model->harga_jual - $model->diskon;
+            if ($produk) {
+                // Ambil harga modal dari relasi produk
+                $hargaModal = $produk->harga_modal;
 
-            // Menghitung keuntungan
-            $keuntungan = ($hargaSetelahDiskon - $hargaModal) * $model->jumlah;
+                // Hitung harga setelah diskon
+                $hargaSetelahDiskon = $model->harga_jual - $model->diskon;
 
-            // Menyimpan keuntungan ke dalam atribut model
-            $model->keuntungan = $keuntungan;
+                // Hitung keuntungan
+                $model->keuntungan = ($hargaSetelahDiskon - $hargaModal) * $model->jumlah;
+            }
         });
     }
 }
