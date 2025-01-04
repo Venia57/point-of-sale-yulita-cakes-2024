@@ -46,7 +46,7 @@ class AuthController extends Controller
                 ->addIndexColumn()
                 ->addColumn('is_admin', function ($user) {
                     if ($user->is_admin == false) {
-                        return 'Biasa';
+                        return 'Kasir';
                     } else {
                         return 'Admin';
                     }
@@ -63,7 +63,7 @@ class AuthController extends Controller
         return DataTables::of(collect([$user]))
             ->addIndexColumn()
             ->addColumn('is_admin', function ($user) {
-                return $user->is_admin ? 'Admin' : 'Biasa';
+                return $user->is_admin ? 'Admin' : 'Kasir';
             })
             ->addColumn('aksi', function ($user) {
                 return view('components.user-tombol-aksi')->with('user', $user);
@@ -78,7 +78,7 @@ class AuthController extends Controller
             'nama' => 'required',
             'username' => 'required|unique:users,username',
             'is_admin' => 'required',
-            'password' => 'required',
+            'password' => 'required|min:8|max:8',
             'foto_profil' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
             'nama.required' => 'Nama harus diisi',
@@ -86,6 +86,8 @@ class AuthController extends Controller
             'username.unique' => 'Username sudah digunakan',
             'is_admin.required' => 'Peran harus diisi',
             'password.required' => 'Password harus diisi',
+            'password.min' => 'Password kurang dari 8 karakter',
+            'password.max' => 'Password lebih dari 8 karakter',
             'foto_profil.image' => 'Foto Profil harus berupa gambar',
             'foto_profil.mimes' => 'Foto Profil harus berupa file jpeg, png, jpg, atau gif',
             'foto_profil.max' => 'Foto Profil maksimal berukuran 2MB',
