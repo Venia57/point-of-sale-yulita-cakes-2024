@@ -58,7 +58,6 @@
                                     <input type="checkbox" name="select_all" id="select_all">
                                 </th>
                                 <th>No</th>
-                                <th>Kode Produk</th>
                                 <th>Nama Produk</th>
                                 <th>Nama Kategori</th>
                                 <th>Harga Modal</th>
