@@ -37,7 +37,7 @@
                     </div>
                     <div id="diskonErrorEdit" class="text-danger"></div>
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="diskon">Diskon</span>
+                        <span class="input-group-text" id="diskon">Diskon %</span>
                         <input name="diskon" id="inputDiskonEdit" type="number" class="form-control"
                             placeholder="Masukan diskon" aria-label="diskonEdit" aria-describedby="diskonEdit" />
                     </div>
