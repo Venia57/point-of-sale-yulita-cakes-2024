@@ -52,7 +52,7 @@
         </div>
         <!-- /.container-fluid -->
     </section>
-    <section class="content" >
+    <section class="content">
         @include('components.kasir.produk')
         <div class="container-fluid">
             <div class="row">
@@ -62,12 +62,13 @@
                             <form class="form-produk">
                                 @csrf
                                 <div class="form-group row">
-                                    <label for="id" class="col-lg-2 col-form-label">Kode Produk</label>
+                                    <label for="id" class="col-lg-2 col-form-label">Produk</label>
                                     <div class="col-lg-5">
                                         <div class="input-group">
                                             <input type="hidden" name="id_penjualan" id="id_penjualan" value="">
-                                            <input type="hidden" name="id_produk" id="id_produk" >
-                                            <input type="text" class="form-control" name="kode_produk" id="kode_produk" style="background-color:#F4B7BE; color: black">
+                                            <input type="hidden" name="id_produk" id="id_produk">
+                                            <input type="text" class="form-control" name="kode_produk" id="kode_produk"
+                                                style="background-color:#F4B7BE; color: black">
                                             <div class="input-group-append">
                                                 <button onclick="tampilProduk()" class="btn btn-info btn-flat"
                                                     type="button">
@@ -80,13 +81,11 @@
                             </form>
 
                             <div class="table-responsive">
-                                <table id="tabelKasir"
-                                    class="table table-striped table-hover table-bordered text-center">
+                                <table id="tabelKasir" class="table table-striped table-hover table-bordered text-center">
                                     <caption>Daftar Transaksi</caption>
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Kode</th>
                                             <th>Nama</th>
                                             <th>Harga</th>
                                             <th>Jumlah</th>
@@ -114,21 +113,26 @@
                                         <div class="form-group row">
                                             <label for="totalrp" class="col-lg-4 col-form-label">Total</label>
                                             <div class="col-lg-8">
-                                                <input type="text" id="totalrp" class="form-control" style="background-color:#F4B7BE; color: black" readonly>
+                                                <input type="text" id="totalrp" class="form-control"
+                                                    style="background-color:#F4B7BE; color: black" readonly>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label for="diskon" class="col-lg-4 col-form-label">Diskon</label>
-                                            <div class="col-lg-8">
-                                                <input type="number" name="diskon" id="diskon" class="form-control"
-                                                    value="0" onfocus="clearZero(this)" onblur="restoreZero(this)"
-                                                    oninput="hitungDiskon(); formatNumber(this)" style="background-color:#F4B7BE; color: black">
+                                        @can('admin')
+                                            <div class="form-group row">
+                                                <label for="diskon" class="col-lg-4 col-form-label">Diskon</label>
+                                                <div class="col-lg-8">
+                                                    <input type="number" name="diskon" id="diskon" class="form-control"
+                                                        value="0" onfocus="clearZero(this)" onblur="restoreZero(this)"
+                                                        oninput="hitungDiskon(); formatNumber(this)"
+                                                        style="background-color:#F4B7BE; color: black">
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endcan
                                         <div class="form-group row">
                                             <label for="bayar" class="col-lg-4 col-form-label">Bayar</label>
                                             <div class="col-lg-8">
-                                                <input type="text" id="bayarrp" class="form-control" style="background-color:#F4B7BE; color: black" readonly>
+                                                <input type="text" id="bayarrp" class="form-control"
+                                                    style="background-color:#F4B7BE; color: black" readonly>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -136,22 +140,27 @@
                                             <div class="col-lg-8">
                                                 <input type="number" id="diterima" class="form-control" name="diterima"
                                                     value="0" onfocus="clearZero(this)" onblur="restoreZero(this)"
-                                                    oninput="hitungKembalian(); formatNumber(this)" style="background-color:#F4B7BE; color: black">
+                                                    oninput="hitungKembalian(); formatNumber(this)"
+                                                    style="background-color:#F4B7BE; color: black">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label for="kembali" class="col-lg-4 col-form-label">Kembali</label>
                                             <div class="col-lg-8">
                                                 <input type="text" id="kembali" name="kembali" class="form-control"
-                                                    value="0" style="background-color:#F4B7BE; color: black" readonly>
+                                                    value="0" style="background-color:#F4B7BE; color: black"
+                                                    readonly>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="nama_kasir" value="{{ Auth::user()->nama }}">
+                                        <input type="hidden" id="nama_kasir" value="{{ Auth::user()->id }}">
                                         <div class="box-footer ">
-                                            <button type="submit" class=" mt-3 btn btn-info btn-sm btn-flat pull-right mr-3"
+                                            <button type="submit"
+                                                class=" mt-3 btn btn-info btn-sm btn-flat pull-right mr-3"
                                                 id="btn-simpan"><i class="fa fa-save"></i> Simpan Transaksi</button>
-                                            <button type="submit" class=" mt-3 btn btn-warning btn-sm btn-flat pull-right"
-                                                id="btn-simpan-dan-cetak-nota"><i class="fa fa-print"></i> Simpan dan Cetak Nota Transaksi</button>
+                                            <button type="submit"
+                                                class=" mt-3 btn btn-warning btn-sm btn-flat pull-right"
+                                                id="btn-simpan-dan-cetak-nota"><i class="fa fa-print"></i> Simpan dan
+                                                Cetak Nota Transaksi</button>
                                         </div>
                                     </form>
                                 </div>
