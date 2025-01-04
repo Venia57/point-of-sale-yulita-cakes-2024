@@ -23,13 +23,17 @@ class Penjualan extends Model
     {
         return $this->hasMany(DetailPenjualan::class, 'id_penjualan');
     }
-
     protected static function boot()
     {
         parent::boot();
 
         static::saving(function ($model) {
-            $model->nama_kasir = Auth::user()->nama;
+            $model->id_user = Auth::user()->id;
         });
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
 }
