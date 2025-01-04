@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\LowStockNotification;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class KasirController extends Controller
 {
@@ -20,29 +21,38 @@ class KasirController extends Controller
 
     public function addProduct(Request $request)
     {
+        $harga = $request->input('harga');
+        $diskon = $request->input('diskon');
+        $jumlah = 1; // Default jumlah awal
+
+        // Hitung subtotal setelah diskon
+        $subtotal = ($harga * $jumlah) - ($harga * $jumlah * $diskon / 100);
+
         $product = [
-            'kode' => $request->input('kode'),
+            'id' => $request->input('id'),
             'nama' => $request->input('nama'),
-            'harga' => $request->input('harga'),
-            'diskon' => $request->input('diskon'),
-            'jumlah' => 1,
-            'subtotal' => $request->input('harga') * 1 - ($request->input('diskon'))
+            'harga' => $harga,
+            'diskon' => $diskon,
+            'jumlah' => $jumlah,
+            'subtotal' => $subtotal
         ];
 
         return response()->json(['product' => $product]);
     }
 
+
     public function updateQuantity(Request $request)
     {
-        $kode = $request->input('kode');
         $jumlah = $request->input('jumlah');
         $harga = $request->input('harga');
-        $diskon = $request->input('diskon');
+        $diskon = $request->input('diskon'); // Diskon dalam persen
 
-        $subtotal = $harga * $jumlah - $diskon * $jumlah;
+        // Hitung subtotal setelah diskon
+        $subtotal = ($harga * $jumlah) - (($harga * $jumlah) * $diskon / 100);
 
         return response()->json(['subtotal' => $subtotal]);
     }
+
 
     protected function calculateTotal($products)
     {
@@ -56,42 +66,38 @@ class KasirController extends Controller
     public function simpanTransaksi(Request $request)
     {
         try {
-            // Simpan penjualan
+            // Save transaction
             $penjualan = Penjualan::create([
                 'total_item' => $request->total_item,
                 'total_harga' => $request->total_harga,
                 'diskon' => $request->diskon,
                 'bayar' => $request->bayar,
                 'diterima' => $request->diterima,
-                'nama_kasir' => $request->nama_kasir,
+                'id_user' => Auth::user()->id,
             ]);
 
             foreach ($request->produk as $item) {
-                // Mencari ID produk berdasarkan kode_produk
-                $produk = Produk::where('kode_produk', $item['id'])->first();
+                $produk = Produk::find($item['id']);
 
                 if (!$produk) {
-                    return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan dengan kode: ' . $item['id']], 422);
+                    return response()->json(['success' => false, 'message' => 'Produk tidak ditemukan dengan ID: ' . $item['id']], 422);
                 }
 
                 DetailPenjualan::create([
                     'id_penjualan' => $penjualan->id,
-                    'id_produk' => $produk->id, // Gunakan ID produk yang valid
+                    'id_produk' => $produk->id,
                     'harga_jual' => $item['harga_jual'],
                     'jumlah' => $item['jumlah'],
                     'diskon' => $item['diskon'] ?? 0,
                     'subtotal' => $item['subtotal'],
                 ]);
 
-                // Update stok produk
+                // Update product stock
                 $produk->stok -= $item['jumlah'];
                 $produk->save();
 
                 if (in_array($produk->stok, [1, 2, 3])) {
-                    // Mendapatkan semua user, baik admin maupun non-admin
                     $users = User::all();
-
-                    // Kirim notifikasi ke setiap user
                     foreach ($users as $user) {
                         $user->notify(new LowStockNotification($produk));
                     }
