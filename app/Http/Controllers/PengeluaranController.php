@@ -4,25 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengeluaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
 
 class PengeluaranController extends Controller
 {
     public function index()
-    {
-        $pengeluaran = Pengeluaran::orderBy('created_at', 'desc')->get();
+{
+    $pengeluaran = Pengeluaran::with('user')->orderBy('created_at', 'desc')->get();
 
-        return DataTables::of($pengeluaran)
-            ->addIndexColumn()
-            ->addColumn('nominal', function ($data) {
-                return format_uang($data->nominal);
-            })
-            ->addColumn('aksi', function ($pengeluaran) {
-                return view('components.pengeluaran.tombol-aksi')->with('pengeluaran', $pengeluaran);
-            })->rawColumns(['aksi'])
-            ->make(true);
-    }
+    return DataTables::of($pengeluaran)
+        ->addIndexColumn()
+        ->addColumn('nominal', function ($data) {
+            return format_uang($data->nominal);
+        })
+        ->addColumn('id_user', function ($data) {
+            return $data->id_user ? $data->user->nama : '-';
+        })
+        ->addColumn('aksi', function ($pengeluaran) {
+            return view('components.pengeluaran.tombol-aksi')->with('pengeluaran', $pengeluaran);
+        })
+        ->rawColumns(['aksi'])
+        ->make(true);
+}
+
 
 
     public function store(Request $request)
@@ -44,6 +50,7 @@ class PengeluaranController extends Controller
         $pengeluaran = new Pengeluaran();
         $pengeluaran->deskripsi = $request->deskripsi;
         $pengeluaran->nominal = $request->nominal;
+        $pengeluaran->id_user = Auth::user()->id;
         $pengeluaran->save();
         return response()->json(['message' => 'Pengeluaran berhasil ditambahkan.']);
     }
